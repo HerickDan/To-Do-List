@@ -7,9 +7,9 @@ const Section = styled.section`
     background-color: blue;
     position: absolute;
     display: flex;
-    justify-content:center;
     align-items:center;
-    flex-direction: column
+    flex-direction: column;
+    padding
 `
 
 export const Sectionlist = ({ children }: { children: ReactNode }) =>{
