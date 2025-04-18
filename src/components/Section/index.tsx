@@ -1,9 +1,10 @@
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { Task } from "../Task";
-import { Box, Button, FormGroup, Menu, MenuItem, Select, TextField } from "@mui/material";
-import { FORMERR } from "dns";
+import {  Button, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
 import { ListSection } from "../Box";
+import "./style.css"
+
 
 const Section = styled.section`
     width: 100vw;  
@@ -16,37 +17,52 @@ const Section = styled.section`
     padding
 `;
 
+interface Type{
+  taskName:string,
+  priority: string
+}
+
 export const Sectionlist = () => {
-  const [taskList, setTaskList] = useState<{ name: string; id: Number }[]>([]);
+  const [taskList, setTaskList] = useState<{ name: string; id: Number, priority: string }[]>([]);
   const [id, setId] = useState(0);
-  const buildTask = () => {
-    const name = "herick";
+  const [taskName, setTaskName] = useState("")
+  const [priority, setPriority] = useState("")
+  const options = ["Alta", "Média", "Baixa"]
+
+  const buildTask = ({ taskName, priority }: Type) => {
+    console.log(taskName, priority)
     setId(Math.floor(Math.random() * 100));
-    setTaskList([...taskList, { name: name, id: id }]);
+    setTaskList([...taskList, { name: taskName, id: id, priority: priority }]);
+    setTaskName("")
+    setPriority("")
   };
+
+  const handleChange = (e: SelectChangeEvent) =>{
+      setPriority(e.target.value)
+      console.log(e.target.value)
+  }
+
+
   return (
     <Section>
       <h1>TO DO LIST</h1>
       <ListSection>
-            <FormGroup>
-              <TextField/>
-              <Select>
-                <MenuItem>
-                  Alta
-                </MenuItem>
-                <MenuItem>
-                  Média
-                </MenuItem>
-                <MenuItem>
-                  Baixa
-                </MenuItem>
+            <form className="form">
+              <TextField className="taskName" onChange={(e)=>setTaskName(e.target.value)} value={taskName}/>
+              <Select className="options" onChange={handleChange} value={priority}>
+                 {options.map((value, key)=>(
+                    <MenuItem key={key} value={value}>
+                        {value}
+                    </MenuItem>
+                 ))}
               </Select>
-              <Button>
+               <Button 
+              variant="contained" onClick={()=>{buildTask({taskName, priority})}}>
                 Adcionar
-              </Button>
-            </FormGroup>
-        {taskList.map((item, key) => (
-          <Task key={id} />
+              </Button> 
+            </form>
+        {taskList.map((value) => (
+          <Task id={id} value={value.name} priority={value.priority}/>
         ))}
       </ListSection>
     </Section>
