@@ -8,7 +8,7 @@ export const Task = () => {
         <input type="radio" id="task-1" name="task" value="Teste" />
         <label htmlFor="task-1">Teste</label>
         </div>
-        <Chip label="Clickable" />
+        <Chip label="Clickable"  />
     </article>
   );
 };

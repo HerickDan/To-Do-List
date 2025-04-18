@@ -1,8 +1,9 @@
 import { ReactNode, useState } from "react";
 import styled from "styled-components";
 import { Task } from "../Task";
-import { Box, FormGroup } from "@mui/material";
+import { Box, Button, FormGroup, Menu, MenuItem, Select, TextField } from "@mui/material";
 import { FORMERR } from "dns";
+import { ListSection } from "../Box";
 
 const Section = styled.section`
     width: 100vw;  
@@ -26,16 +27,28 @@ export const Sectionlist = () => {
   return (
     <Section>
       <h1>TO DO LIST</h1>
-      <Box>
-        <form>
-            <FormGroup/>
-            
-        </form>
-        <h2>Danilo</h2>
+      <ListSection>
+            <FormGroup>
+              <TextField/>
+              <Select>
+                <MenuItem>
+                  Alta
+                </MenuItem>
+                <MenuItem>
+                  Média
+                </MenuItem>
+                <MenuItem>
+                  Baixa
+                </MenuItem>
+              </Select>
+              <Button>
+                Adcionar
+              </Button>
+            </FormGroup>
         {taskList.map((item, key) => (
           <Task key={id} />
         ))}
-      </Box>
+      </ListSection>
     </Section>
   );
 };
