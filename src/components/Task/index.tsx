@@ -1,23 +1,31 @@
-import { ReactNode } from "react";
 import "./style.css";
 import { Chip } from "@mui/material";
 
+
+interface ListKeys {
+  name: string;
+  priority: string;
+  id: Number
+}
+
 interface Props{
-  id: Number,
-  value:string,
-  priority: string
+  onDelete: (itemId: Number)=>void,
+  items: ListKeys[];
 }
 
 
-export const Task = ({id, value, priority}: Props) => {
+export const Task = ({onDelete, items}: Props) => {
   return (
-    <article className="task" id={id.toString()}>
+    <div>
+      {items.map((item, key)=>(
+      <article className="task" id={item.id.toString()} key={key}>
         <div>
-        <input type="radio" id="task-1" name="task" value="Teste" />
-        <label htmlFor="task-1">{value}</label>
-        <label htmlFor="task-1">{priority}</label>
+        <input type="radio" id="task-1" name="task" value="Teste" onClick={()=>onDelete(item.id)} />
+        <label htmlFor="task-1">{item.name}</label>
         </div>
-        <Chip label="Clickable"  />
+        <Chip label={item.priority} />
     </article>
+    ))}
+    </div>
   );
 };

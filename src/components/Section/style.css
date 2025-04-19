@@ -11,3 +11,11 @@
 .options{
     width: 32%;
 }
+
+.tasksBox{
+    margin-top: 5%;
+    width: 80%;
+    height: 80%;
+    border:solid 1px#b3c9c1;
+    border-radius: 15px;
+}
