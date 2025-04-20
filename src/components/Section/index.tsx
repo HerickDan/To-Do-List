@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ReactEventHandler, useState } from "react";
 import styled from "styled-components";
 import { Task } from "../Task";
 import {
@@ -26,6 +26,7 @@ const Section = styled.section`
 interface Type {
   taskName: string;
   priority: string;
+  event: any
 }
 
 export const Sectionlist = () => {
@@ -37,7 +38,8 @@ export const Sectionlist = () => {
   const [priority, setPriority] = useState("");
   const options = ["Alta", "Média", "Baixa"];
 
-  const buildTask = ({ taskName, priority }: Type) => {
+  const buildTask = ({ taskName, priority, event }: Type) => {
+    event.preventDefault()
     console.log(taskName, priority);
     setId(Math.floor(Math.random() * 100));
     setTaskList([...taskList, { name: taskName, id: id, priority: priority }]);
@@ -60,13 +62,14 @@ export const Sectionlist = () => {
     <Section>
       <h1>TO DO LIST</h1>
       <ListSection>
-        <form className="form">
+        <form className="form" onSubmit={(event)=>buildTask({ taskName, priority, event })}>
           <TextField
             className="taskName"
             onChange={(e) => setTaskName(e.target.value)}
             value={taskName}
+            required ={true}
           />
-          <Select className="options" onChange={handleChange} value={priority}>
+          <Select className="options" onChange={handleChange} value={priority} required>
             {options.map((value, key) => (
               <MenuItem key={key} value={value}>
                 {value}
@@ -75,9 +78,7 @@ export const Sectionlist = () => {
           </Select>
           <Button
             variant="contained"
-            onClick={() => {
-              buildTask({ taskName, priority });
-            }}
+            type="submit"
           >
             Adcionar
           </Button>
