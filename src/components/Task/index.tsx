@@ -14,6 +14,7 @@ interface Props {
 }
 
 export const Task = ({ onDelete, items }: Props) => {
+  const [check, setCheck] = useState(false)
   const getColor = (priority: string) => {
     if (priority === "Alta") return "#fd0810"
     if (priority === "Média") return "#e3ed14"
@@ -31,8 +32,7 @@ export const Task = ({ onDelete, items }: Props) => {
                 type="checkbox"
                 id="task-1"
                 name="task"
-                value="Teste"
-                onClick={() => onDelete(item.id)}
+                onClick={() => {onDelete(item.id); setCheck(false)}}
               />
               <label htmlFor="task-1" className="taskName">{item.name}</label>
             </div>
