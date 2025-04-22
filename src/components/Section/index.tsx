@@ -4,6 +4,8 @@ import { Task } from "../Task";
 import {
   Box,
   Button,
+  FormControl,
+  InputLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -40,7 +42,6 @@ export const Sectionlist = () => {
 
   const buildTask = ({ taskName, priority, event }: Type) => {
     event.preventDefault()
-    console.log(taskName, priority);
     setId(Math.floor(Math.random() * 100));
     setTaskList([...taskList, { name: taskName, id: id, priority: priority }]);
     setTaskName("");
@@ -48,14 +49,12 @@ export const Sectionlist = () => {
   };
 
   const onDelete = (itemId: Number) => {
-    console.log(itemId)
     const updatedItems = taskList.filter((item) => item.id !== itemId);
     setTaskList(updatedItems);
   };
 
   const handleChange = (e: SelectChangeEvent) => {
     setPriority(e.target.value);
-    console.log(e.target.value);
   };
 
   return (
@@ -68,14 +67,20 @@ export const Sectionlist = () => {
             onChange={(e) => setTaskName(e.target.value)}
             value={taskName}
             required ={true}
+            placeholder="Digite sua tarefa"
           />
-          <Select className="options" onChange={handleChange} value={priority} required>
+        <FormControl className="options">
+          <InputLabel htmlFor="prioridade">
+            Prioridade
+          </InputLabel>
+        <Select  id="prioridade" onChange={handleChange} value={priority} required label="prioridade">
             {options.map((value, key) => (
               <MenuItem key={key} value={value}>
                 {value}
               </MenuItem>
             ))}
           </Select>
+        </FormControl>
           <Button
             variant="contained"
             type="submit"

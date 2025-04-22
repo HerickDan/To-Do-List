@@ -8,3 +8,7 @@
     position: relative;
     align-items: center;
 }
+
+.taskName{
+    font-size: 20px;
+}

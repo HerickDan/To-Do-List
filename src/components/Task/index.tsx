@@ -15,9 +15,9 @@ interface Props {
 
 export const Task = ({ onDelete, items }: Props) => {
   const getColor = (priority: string) => {
-    if (priority === "Alta") return "red";
-    if (priority === "Média") return "yellow";
-    return "green";
+    if (priority === "Alta") return "#fd0810"
+    if (priority === "Média") return "#e3ed14"
+    return "#4af423";
   };
 
   return (
@@ -28,15 +28,15 @@ export const Task = ({ onDelete, items }: Props) => {
           <article className="task" id={item.id.toString()} key={key}>
             <div>
               <input
-                type="radio"
+                type="checkbox"
                 id="task-1"
                 name="task"
                 value="Teste"
                 onClick={() => onDelete(item.id)}
               />
-              <label htmlFor="task-1">{item.name}</label>
+              <label htmlFor="task-1" className="taskName">{item.name}</label>
             </div>
-            <Chip label={item.priority} sx={{ backgroundColor: color }} />
+            <Chip label={item.priority} sx={{ backgroundColor: color, fontSize:"17px", fontWeight:"500",  }} />
           </article>
         );
       })}
