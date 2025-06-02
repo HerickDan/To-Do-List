@@ -43,9 +43,13 @@ export const Sectionlist = () => {
   const buildTask = ({ taskName, priority, event }: Type) => {
     event.preventDefault()
     setId(Math.floor(Math.random() * 100));
-    setTaskList([...taskList, { name: taskName, id: id, priority: priority }]);
-    setTaskName("");
-    setPriority("");
+    if(taskList.find(oneTask=>oneTask.name ===taskName)){
+        alert("Já existe uma tarefa com esse nome")
+    }else{
+      setTaskList([...taskList, { name: taskName, id: id, priority: priority }]);
+      setTaskName("");
+      setPriority("");
+    }
   };
 
   const onDelete = (itemId: Number) => {
