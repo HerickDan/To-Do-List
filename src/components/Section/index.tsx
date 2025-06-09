@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { ListSection } from "../Box";
 import "./style.css";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 const Section = styled.section`
     width: 100vw;  
@@ -40,6 +41,26 @@ export const Sectionlist = () => {
   const [priority, setPriority] = useState("");
   const options = ["Alta", "Média", "Baixa"];
 
+ const {isPending, mutate, error, data} = useMutation({
+    mutationKey:["data"],
+    mutationFn: async (postData:{title: string}) => {
+    const response = await fetch("http://localhost:8080/api/createTask", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(postData)
+    })
+
+    if (!response.ok) {
+      throw new Error('Erro ao enviar os dados')
+    }
+
+    return response.json()
+  }
+  })
+
+
   const buildTask = ({ taskName, priority, event }: Type) => {
     event.preventDefault()
     setId(Math.floor(Math.random() * 100));
@@ -49,6 +70,7 @@ export const Sectionlist = () => {
       setTaskList([...taskList, { name: taskName, id: id, priority: priority }]);
       setTaskName("");
       setPriority("");
+      mutate({title: taskName})
     }
   };
 
@@ -60,6 +82,10 @@ export const Sectionlist = () => {
   const handleChange = (e: SelectChangeEvent) => {
     setPriority(e.target.value);
   };
+
+  
+
+ 
 
   return (
     <Section>
