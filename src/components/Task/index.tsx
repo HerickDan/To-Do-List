@@ -1,45 +1,46 @@
 import { useEffect, useState } from "react";
 import "./style.css";
 import { Chip } from "@mui/material";
+import { useUpdateTaksStatus } from "../customHooks/useUpdateTaskStatus";
 
 interface ListKeys {
-  name: string;
+  taskName: string;
   priority: string;
-  id: Number;
+  id: string;
 }
 
 interface Props {
-  onDelete: (itemId: Number) => void;
-  items: ListKeys[];
+  data: ListKeys[];
 }
 
-export const Task = ({ onDelete, items }: Props) => {
-  const [check, setCheck] = useState(false)
+export const Task = ({data}: Props) => {
   const getColor = (priority: string) => {
     if (priority === "Alta") return "#fd0810"
     if (priority === "Média") return "#e3ed14"
     return "#4af423";
   };
 
+  const{mutate} = useUpdateTaksStatus()
+
   return (
     <div>
-      {items.map((item, key) => {
+      {data.map((item, key) => {
         const color = getColor(item.priority);
         return (
-          <article className="task" id={item.id.toString()} key={key}>
+          <article className="task" key={item.id}>
             <div>
               <input
                 type="checkbox"
                 id="task-1"
                 name="task"
-                onClick={() => {onDelete(item.id); setCheck(false)}}
+                onClick={() => {mutate({id: item.id})}}
               />
-              <label htmlFor="task-1" className="taskName">{item.name}</label>
+              <label htmlFor="task-1" className="taskName">{item.taskName}</label>
             </div>
             <Chip label={item.priority} sx={{ backgroundColor: color, fontSize:"17px", fontWeight:"500",  }} />
           </article>
         );
-      })}
+      })} 
     </div>
   );
 };

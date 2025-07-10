@@ -1,10 +1,11 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 
 export const useCreateTask = () => {
+ const queryClient = useQueryClient()
  return  useMutation({
-    mutationKey:["data"],
-    mutationFn: async (postData:{taskName: string}) => {
+    mutationKey:["create"],
+    mutationFn: async (postData:{taskName: string, priority: string}) => {
     const response = await fetch("http://localhost:8080/api/createTask", {
       method: 'POST',
       headers: {
@@ -12,12 +13,9 @@ export const useCreateTask = () => {
       },
       body: JSON.stringify(postData)
     })
-
-    if (!response.ok) {
-      throw new Error('Erro ao enviar os dados')
-    }
-
-    return response.json()
-  }
+    return response.json()},
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey:['data']});
+    },
   })
 }

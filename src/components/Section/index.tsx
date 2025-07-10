@@ -1,4 +1,4 @@
-import { ReactEventHandler, useState } from "react";
+import { ReactEventHandler, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Task } from "../Task";
 import {
@@ -14,6 +14,8 @@ import {
 import { ListSection } from "../Box";
 import "./style.css";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useCreateTask } from "../customHooks/useMutation";
+import { useGetTasks } from "../customHooks/useGetTasks";
 
 const Section = styled.section`
     width: 100vw;  
@@ -23,7 +25,8 @@ const Section = styled.section`
     display: flex;
     align-items:center;
     flex-direction: column;
-    padding
+    padding;
+    overlfow-y:auto;
 `;
 
 interface Type {
@@ -33,59 +36,20 @@ interface Type {
 }
 
 export const Sectionlist = () => {
-  const [taskList, setTaskList] = useState<
-    { name: string; id: Number; priority: string }[]
-  >([]);
-  const [id, setId] = useState(0);
   const [taskName, setTaskName] = useState("");
   const [priority, setPriority] = useState("");
   const options = ["Alta", "Média", "Baixa"];
-
- const {isPending, mutate, error, data} = useMutation({
-    mutationKey:["data"],
-    mutationFn: async (postData:{title: string}) => {
-    const response = await fetch("http://localhost:8080/api/createTask", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(postData)
-    })
-
-    if (!response.ok) {
-      throw new Error('Erro ao enviar os dados')
-    }
-
-    return response.json()
-  }
-  })
-
+  const {data} = useGetTasks()
+  const {mutate} = useCreateTask()
 
   const buildTask = ({ taskName, priority, event }: Type) => {
     event.preventDefault()
-    setId(Math.floor(Math.random() * 100));
-    if(taskList.find(oneTask=>oneTask.name ===taskName)){
-        alert("Já existe uma tarefa com esse nome")
-    }else{
-      setTaskList([...taskList, { name: taskName, id: id, priority: priority }]);
-      setTaskName("");
-      setPriority("");
-      mutate({title: taskName})
-    }
-  };
-
-  const onDelete = (itemId: Number) => {
-    const updatedItems = taskList.filter((item) => item.id !== itemId);
-    setTaskList(updatedItems);
+      mutate({taskName: taskName, priority: priority})
   };
 
   const handleChange = (e: SelectChangeEvent) => {
     setPriority(e.target.value);
-  };
-
-  
-
- 
+  }
 
   return (
     <Section>
@@ -118,9 +82,9 @@ export const Sectionlist = () => {
             Adcionar
           </Button>
         </form>
-        <Box className="tasksBox">
-          {taskList.length>0 ? (
-            <Task items={taskList} onDelete={onDelete}/>
+        <Box className="tasksBox" overflow="auto">
+          {data? (
+            <Task data={data} />
           ): null}
         </Box>
       </ListSection>
