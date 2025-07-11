@@ -1,21 +1,22 @@
-import { ReactEventHandler, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Task } from "../Task";
 import {
   Box,
   Button,
+  Chip,
   FormControl,
   InputLabel,
   MenuItem,
+  Modal,
   Select,
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
 import { ListSection } from "../Box";
 import "./style.css";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useCreateTask } from "../customHooks/useMutation";
 import { useGetTasks } from "../customHooks/useGetTasks";
+import { useCreateTask } from "../customHooks/useMutation";
 
 const Section = styled.section`
     width: 100vw;  
@@ -25,7 +26,6 @@ const Section = styled.section`
     display: flex;
     align-items:center;
     flex-direction: column;
-    padding;
     overlfow-y:auto;
 `;
 
@@ -36,45 +36,61 @@ interface Type {
 }
 
 export const Sectionlist = () => {
-  const [taskName, setTaskName] = useState("");
+  const [taskName, setTaskName] = useState("")
   const [priority, setPriority] = useState("");
   const options = ["Alta", "Média", "Baixa"];
-  const {data} = useGetTasks()
-  const {mutate} = useCreateTask()
+  const [show, setShow] = useState<boolean>()
+  const [open, setOpen] = useState(false)
+
+  const { data } = useGetTasks()
+  const { mutate } = useCreateTask()
 
   const buildTask = ({ taskName, priority, event }: Type) => {
     event.preventDefault()
-      mutate({taskName: taskName, priority: priority})
+    mutate({ taskName: taskName, priority: priority })
   };
 
   const handleChange = (e: SelectChangeEvent) => {
     setPriority(e.target.value);
   }
 
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
+
+  useEffect(() => {
+    if (data?.length > 0) {
+      setShow(true);
+    } else {
+      setShow(false);
+    }
+  }, [data])
+
+
+
   return (
     <Section>
       <h1>TO DO LIST</h1>
       <ListSection>
-        <form className="form" onSubmit={(event)=>buildTask({ taskName, priority, event })}>
+        <form className="form" onSubmit={(event) => buildTask({ taskName, priority, event })}>
           <TextField
             className="taskName"
             onChange={(e) => setTaskName(e.target.value)}
             value={taskName}
-            required ={true}
+            required={true}
             placeholder="Digite sua tarefa"
           />
-        <FormControl className="options">
-          <InputLabel htmlFor="prioridade">
-            Prioridade
-          </InputLabel>
-        <Select  id="prioridade" onChange={handleChange} value={priority} required label="prioridade">
-            {options.map((value, key) => (
-              <MenuItem key={key} value={value}>
-                {value}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+          <FormControl className="options">
+            <InputLabel htmlFor="prioridade">
+              Prioridade
+            </InputLabel>
+            <Select id="prioridade" onChange={handleChange} value={priority} required label="prioridade">
+              {options.map((value, key) => (
+                <MenuItem key={key} value={value}>
+                  {value}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <Button
             variant="contained"
             type="submit"
@@ -83,11 +99,42 @@ export const Sectionlist = () => {
           </Button>
         </form>
         <Box className="tasksBox" overflow="auto">
-          {data? (
+          {data ? (
             <Task data={data} />
-          ): null}
+          ) : null}
         </Box>
+        {show ?
+          <>
+            <Button
+              variant="contained"
+              sx={{ marginTop: '2%' }}
+              onClick={handleOpen}
+            >
+              Ver lista completa
+            </Button>
+            <Modal open={open} onClose={handleClose} >
+              <Box>
+                {data.map((item: { taskName: string, priority: string, completed: boolean }) => {
+                  if (item.completed === true) {
+                   return ( <article className="task" >
+                      <div>
+                        <input
+                          type="checkbox"
+                          id="task-1"
+                          name="task"
+                        />
+                        <label htmlFor="task-1" className="taskName">{item.taskName}</label>
+                      </div>
+                      <Chip label={item.priority} />
+                    </article>)
+                  }
+                })}
+              </Box>
+            </Modal>
+          </>
+          : null}
       </ListSection>
     </Section>
   );
 };
+
