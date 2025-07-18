@@ -17,6 +17,9 @@ import { ListSection } from "../Box";
 import "./style.css";
 import { useGetTasks } from "../customHooks/useGetTasks";
 import { useCreateTask } from "../customHooks/useMutation";
+import { CompletedTasksModal } from "../CompletedTasksModal/CompletedTasksModal";
+import { useDeleteAll } from "../customHooks/useDeleteAll";
+
 
 const Section = styled.section`
     width: 100vw;  
@@ -44,7 +47,7 @@ export const Sectionlist = () => {
 
   const { data } = useGetTasks()
   const { mutate } = useCreateTask()
-
+  const { mutate: mutateDelete } = useDeleteAll()
   const buildTask = ({ taskName, priority, event }: Type) => {
     event.preventDefault()
     mutate({ taskName: taskName, priority: priority })
@@ -56,7 +59,7 @@ export const Sectionlist = () => {
 
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
-
+  const clearAll = () =>{setOpen(false)}
   useEffect(() => {
     if (data?.length > 0) {
       setShow(true);
@@ -112,24 +115,8 @@ export const Sectionlist = () => {
             >
               Ver lista completa
             </Button>
-            <Modal open={open} onClose={handleClose} >
-              <Box>
-                {data.map((item: { taskName: string, priority: string, completed: boolean }) => {
-                  if (item.completed === true) {
-                   return ( <article className="task" >
-                      <div>
-                        <input
-                          type="checkbox"
-                          id="task-1"
-                          name="task"
-                        />
-                        <label htmlFor="task-1" className="taskName">{item.taskName}</label>
-                      </div>
-                      <Chip label={item.priority} />
-                    </article>)
-                  }
-                })}
-              </Box>
+            <Modal open={open} onClose={handleClose || clearAll} sx={{display:"flex", justifyContent:"center", alignItems:"center"}}>
+             <CompletedTasksModal data={data} clearAll={mutateDelete}/>
             </Modal>
           </>
           : null}
