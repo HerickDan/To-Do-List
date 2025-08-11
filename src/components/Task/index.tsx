@@ -1,23 +1,24 @@
 import "./style.css";
-import { Chip } from "@mui/material";
+import { Checkbox, Chip } from "@mui/material";
 import { useUpdateTaksStatus } from "../customHooks/useUpdateTaskStatus";
+import { useState } from "react";
 
 interface ListKeys {
-  taskName: string;
-  priority: string;
-  completed:boolean;
-  id: string;
+  taskName: string
+  priority: string
+  completed:boolean
+  id: string
 }
 
 interface Props {
-  data: ListKeys[];
+  data: ListKeys[]
 }
 
 export const Task = ({data}: Props) => {
   const getColor = (priority: string) => {
     if (priority === "Alta") return "#fd0810"
     if (priority === "Média") return "#e3ed14"
-    return "#4af423";
+    return "#4af423"
   };
 
   const{mutate} = useUpdateTaksStatus()
@@ -30,6 +31,7 @@ export const Task = ({data}: Props) => {
           return (
           <article className="task" key={item.id}>
             <div>
+              <Checkbox onClick={()=>mutate({id:item.id})}/>
               <label htmlFor="task-1" className="taskName">{item.taskName}</label>
             </div>
             <Chip label={item.priority} sx={{ backgroundColor: color, fontSize:"17px", fontWeight:"500",  }} />
@@ -38,5 +40,5 @@ export const Task = ({data}: Props) => {
           }
       })} 
     </div>
-  );
-};
+  )
+}

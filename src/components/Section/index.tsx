@@ -98,7 +98,7 @@ export const Sectionlist = () => {
             variant="contained"
             type="submit"
           >
-            Adcionar
+            Adicionar
           </Button>
         </form>
         <Box className="tasksBox" overflow="auto">
