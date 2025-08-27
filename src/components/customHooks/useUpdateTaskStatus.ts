@@ -5,7 +5,7 @@ export const useUpdateTaksStatus = () =>{
      return  useMutation({
          mutationKey:["create"],
          mutationFn: async (postData:{id: string}) => {
-         const response = await fetch(`http://localhost:8080/api/update/${postData.id}`, {
+         const response = await fetch(`http://localhost:8080/to-do-list/update-task/${postData.id}`, {
            method: 'PATCH',
            headers: {
              'Content-Type': 'application/json'

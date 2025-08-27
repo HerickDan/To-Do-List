@@ -6,7 +6,7 @@ export const useDeleteAll = () => {
         {
             mutationKey: ["deleteAll"],
             mutationFn: async () => {
-                const response = await fetch("http://localhost:8080/api/deleteAllTasks", {
+                const response = await fetch("http://localhost:8080/to-do-list/delete-all-tasks", {
                     method: "DELETE",
                     headers: {
                         'Content-Type': 'application/json'

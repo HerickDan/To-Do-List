@@ -6,7 +6,7 @@ export const useCreateTask = () => {
   return useMutation({
     mutationKey: ["create"],
     mutationFn: async (postData: { taskName: string, priority: string }) => {
-      const response = await fetch("http://localhost:8080/api/task", {
+      const response = await fetch("http://localhost:8080/to-do-list/create-task", {
         method: 'POST',
         mode:'cors',
         headers: {
